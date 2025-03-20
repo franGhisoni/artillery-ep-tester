@@ -1,0 +1,25 @@
+[
+  {
+    "id": "f3a69892-d892-4dad-a264-384eb029c61e",
+    "name": "jsonplaceholder",
+    "url": "https://jsonplaceholder.typicode.com/posts",
+    "method": "GET",
+    "headers": {},
+    "body": "",
+    "auth": {
+      "type": "None"
+    }
+  },
+  {
+    "id": "ee53f4de-2fea-4b25-bce6-154b7c987180",
+    "name": "process",
+    "url": "http://localhost:1337/api/payment/process",
+    "method": "POST",
+    "headers": {},
+    "body": "{\n    \"token\": \"d926d124f84c94c778eb223e33474597\",\n    \"issuer_id\": \"3\",\n    \"payment_method_id\": \"master\",\n    \"transaction_amount\": 18863.93,\n    \"installments\": 1,\n    \"payer\": {\n        \"email\": \"dlanesan93@gmail.com\",\n        \"identification\": {\n            \"type\": \"DNI\",\n            \"number\": \"12345678\"\n        }\n    },\n    \"external_reference\": \"3c48a9a9-1466-4d39-acea-0e2e39cd46db\",\n    \"userData\": {\n        \"name\": \"Diego\",\n        \"lastname\": \"Lanesan\",\n        \"email\": \"dlanesan93@gmail.com\",\n        \"dni\": \"36614294\",\n        \"tel\": \"36614294\",\n        \"address\": \"Calle 4 682\",\n        \"city\": \"La Plata\",\n        \"province\": \"Buenos Aires\",\n        \"postalCode\": \"1900\",\n        \"taxId\": \"\",\n        \"confirmEmail\": \"dlanesan93@gmail.com\",\n        \"gender\": \"Masculino\"\n    },\n    \"products\":[\n        {\n        \"id\": 29,\n        \"attributes\": {\n            \"name\": \"Membresía Trader\",\n            \"price\": 20,\n            \"category\": \"daf\",\n            \"free\": false,\n            \"teachableCourseId\": null,\n            \"createdAt\": \"2024-05-07T22:47:33.034Z\",\n            \"updatedAt\": \"2024-12-30T15:42:35.236Z\",\n            \"publishedAt\": \"2024-05-07T22:47:33.034Z\",\n            \"billingDescription\": null,\n            \"checkoutId\": null,\n            \"imageUrl\": null,\n            \"slug\": \"membresia-trader\",\n            \"mpAccount\": \"daf\",\n            \"disabled\": false,\n            \"facturanteAccount\": \"daf\",\n            \"terms_and_conditions\": \"-\",\n            \"redirectUrl\": null,\n            \"thanksField\": null,\n            \"description\": null,\n            \"campaign\": {\n                \"data\": null\n            }\n        },\n        \"price\": \"15.48\",\n        \"currencyPrice\": 18863.928,\n        \"closer\": \"\"\n    },\n {\n    \"id\": 29,\n    \"attributes\": {\n        \"name\": \"Membresía Trader\",\n        \"price\": 20,\n        \"category\": \"daf\",\n        \"free\": false,\n        \"teachableCourseId\": null,\n        \"createdAt\": \"2024-05-07T22:47:33.034Z\",\n        \"updatedAt\": \"2024-12-30T15:42:35.236Z\",\n        \"publishedAt\": \"2024-05-07T22:47:33.034Z\",\n        \"billingDescription\": null,\n        \"checkoutId\": null,\n        \"imageUrl\": null,\n        \"slug\": \"membresia-trader\",\n        \"mpAccount\": \"daf\",\n        \"disabled\": false,\n        \"facturanteAccount\": \"daf\",\n        \"terms_and_conditions\": \"-\",\n        \"redirectUrl\": null,\n        \"thanksField\": null,\n        \"description\": null,\n        \"campaign\": {\n            \"data\": null\n        }\n    },\n    \"price\": \"15.48\",\n    \"currencyPrice\": 18863.928,\n    \"closer\": \"\"\n}\n\n    ]\n}",
+    "auth": {
+      "type": "Bearer",
+      "token": "a7fbe2c4f285bf453e24e7f6872b2c259200bfa4e9692fd2207077456ff04654ea6246c4ba568b0611b0a99a1164f3e5c8a7584ca68681d3e28e7b775d041f43578bb69bf19d527838b7f3837200c0b63ba69be0823fb48836249dbd89f86c934afed94d46be9a02653dbc223b0dda72f09c679a43d699680f3416144f5b1857"
+    }
+  }
+]

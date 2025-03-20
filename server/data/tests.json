@@ -1,0 +1,30 @@
+[
+  {
+    "id": "332cab9e-1924-490e-b442-b43296be95fa",
+    "name": "jsonplace holder test",
+    "endpoints": [
+      "f3a69892-d892-4dad-a264-384eb029c61e"
+    ],
+    "config": {
+      "duration": 15,
+      "arrivalRate": 1,
+      "rampTo": 5,
+      "maxVusers": 15,
+      "maxLatency": 5000
+    }
+  },
+  {
+    "id": "487de7a0-5e38-4073-bf19-b2f5193096fa",
+    "name": "process",
+    "endpoints": [
+      "ee53f4de-2fea-4b25-bce6-154b7c987180"
+    ],
+    "config": {
+      "duration": 60,
+      "arrivalRate": 1,
+      "rampTo": 5,
+      "maxVusers": 50,
+      "maxLatency": 5000
+    }
+  }
+]
