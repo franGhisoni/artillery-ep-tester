@@ -384,6 +384,21 @@ app.post('/api/import', (req, res) => {
   }
 });
 
+// Servir archivos estáticos del frontend en producción
+if (process.env.NODE_ENV === 'production') {
+  // Ruta al directorio build del frontend (considerando la estructura del proyecto)
+  const staticPath = path.join(process.cwd(), 'dist', 'build');
+  console.log('Serving static files from:', staticPath);
+  
+  // Servir archivos estáticos
+  app.use(express.static(staticPath));
+  
+  // Para cualquier ruta no encontrada, servir index.html
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(staticPath, 'index.html'));
+  });
+}
+
 // Iniciar el servidor
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
