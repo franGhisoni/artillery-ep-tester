@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: artillery-tester
+    env: node
+    buildCommand: ./build.sh
+    startCommand: node server/dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production 
