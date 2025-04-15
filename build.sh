@@ -13,12 +13,22 @@ npm install
 # Construir el servidor
 npm run build
 
-# Crear directorio para guardar el build del frontend donde el servidor pueda accederlo en producción
-mkdir -p dist/build
-
-# Volver al directorio raíz y copiar los archivos del build del frontend
+# Volver al directorio raíz y copiar los archivos del build 
 cd ..
+
+# Mostrar estructura de directorios
+echo "Contenido de la raíz:"
+ls -la
+
+# Crear directorio build dentro de server/dist
+mkdir -p server/dist/build
+
+# Copiar los archivos del build del frontend
 cp -r build/* server/dist/build/
+
+# Verificar que se han copiado
+echo "Verificando contenido copiado:"
+ls -la server/dist/build/
 
 # Establecer NODE_ENV para producción
 echo "NODE_ENV=production" > server/.env 
