@@ -386,8 +386,14 @@ app.post('/api/import', (req, res) => {
 
 // Servir archivos estáticos del frontend en producción
 if (process.env.NODE_ENV === 'production') {
-  // Ruta al directorio build del frontend (considerando la estructura del proyecto)
-  const staticPath = path.join(process.cwd(), 'dist', 'build');
+  // Ruta al directorio build del frontend
+  let staticPath = path.join(process.cwd(), 'dist', 'build');
+  
+  // Si no existe, intentar con la ruta alternativa dentro de server/
+  if (!require('fs').existsSync(staticPath)) {
+    staticPath = path.join(process.cwd(), 'server', 'dist', 'build');
+  }
+
   console.log('Serving static files from:', staticPath);
   
   // Servir archivos estáticos
@@ -395,7 +401,11 @@ if (process.env.NODE_ENV === 'production') {
   
   // Para cualquier ruta no encontrada, servir index.html
   app.get('*', (req, res) => {
-    res.sendFile(path.join(staticPath, 'index.html'));
+    if (require('fs').existsSync(path.join(staticPath, 'index.html'))) {
+      res.sendFile(path.join(staticPath, 'index.html'));
+    } else {
+      res.status(404).send('Frontend build not found. Please check the build process.');
+    }
   });
 }
 
