@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import * as path from 'path';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import * as os from 'os';
 import { ArtilleryConfig, Endpoint, LoadTest, TestResult } from './types';
 
@@ -311,21 +311,35 @@ export const artilleryService = {
     // Ejecutar Artillery como un proceso separado
     const reportFilePath = path.join(TEMP_DIR, `report-${resultId}.json`);
     
-    const command = `artillery run ${configFilePath} -o ${reportFilePath}`;
+    // Build the base command
+    let command = `artillery run ${configFilePath} -o ${reportFilePath} --record`; 
+
+    // Read API key from environment (loaded by dotenv)
+    const apiKey = process.env.ARTILLERY_IO_KEY;
+
+    // Dynamically add the --key flag if the API key exists
+    if (apiKey) {
+      command += ` --key ${apiKey}`;
+      console.log(`Running test with command (API key will be passed via --key)`);
+    } else {
+      console.warn("ARTILLERY_IO_KEY environment variable not found. Test will likely fail to record.");
+      console.log(`Running test with command (API key MISSING): ${command}`);
+    }
     
-    console.log(`Running test with command: ${command}`);
+    // Log the Test ID and Result ID before executing
     console.log(`Test ID: ${test.id}, Result ID: ${resultId}`);
     console.log(`Using Artillery configuration from: ${configFilePath}`);
     
-    const process = exec(command);
-    runningTests.set(resultId, process);
+    // Pass standard env (which should include the key if dotenv worked)
+    const artilleryProcess = exec(command, { env: process.env }); 
+    runningTests.set(resultId, artilleryProcess);
     
     // Capturar la salida en tiempo real
     let output = "Running Artillery test...\n\n";
     let lastProgressUpdate = Date.now();
     let lastProgressValue = 0;
     
-    process.stdout?.on('data', (data) => {
+    artilleryProcess.stdout?.on('data', (data) => {
       output += data.toString();
       
       // Log de depuración para ver el output completo
@@ -437,7 +451,7 @@ export const artilleryService = {
       }
     });
     
-    process.stderr?.on('data', (data) => {
+    artilleryProcess.stderr?.on('data', (data) => {
       output += `ERROR: ${data.toString()}\n`;
       // Actualizar el resultado con la salida de error
       const currentResult = testResults.get(resultId);
@@ -447,7 +461,7 @@ export const artilleryService = {
       }
     });
     
-    process.on('close', (code) => {
+    artilleryProcess.on('close', (code) => {
       console.log(`Test process exited with code ${code}`);
       // Eliminar de los procesos en ejecución
       runningTests.delete(resultId);
@@ -456,7 +470,7 @@ export const artilleryService = {
       const currentResult = testResults.get(resultId);
       if (currentResult) {
         if (code === 0) {
-          // La prueba se completó correctamente, intentar leer el informe
+          // La prueba se completó correctamente, intentar leer el informe JSON
           try {
             // Guardar las métricas actuales antes de procesar el reporte
             // para evitar que se pierdan si el informe no tiene los datos completos
@@ -594,6 +608,7 @@ export const artilleryService = {
                   // Si no hay datos agregados en el informe, mantener las métricas extraídas durante la ejecución
                   console.log("Usando métricas recopiladas durante la ejecución ya que el informe no contiene datos agregados");
                 }
+
               } catch (parseError) {
                 console.error("JSON parse error:", parseError);
                 // Intentar extraer métricas del texto directamente
@@ -622,26 +637,25 @@ export const artilleryService = {
         } else {
           // La prueba falló
           currentResult.status = 'failed';
+          currentResult.progress = 100; // Marcar como 100% aunque falle para detener updates
           currentResult.rawOutput += `\n\nTest failed with exit code ${code}`;
         }
         
         console.log("Sending final result update with metrics:", {
           requestsCompleted: currentResult.summary.requestsCompleted,
           scenarios: currentResult.summary.scenarios,
-          codes: currentResult.summary.codes,
-          latency: currentResult.summary.latency,
-          rps: currentResult.summary.rps
+          codes: currentResult.summary.codes
         });
         
         testResults.set(resultId, currentResult);
       }
       
-      // Limpiar archivos temporales
+      // Limpiar archivos temporales (SOLO el de config, ya no el JSON)
       try {
         if (fs.existsSync(configFilePath)) {
           fs.unlinkSync(configFilePath);
         }
-        if (fs.existsSync(reportFilePath)) {
+        if (fs.existsSync(reportFilePath)) { // Also remove the JSON report now
           fs.unlinkSync(reportFilePath);
         }
       } catch (error) {
@@ -670,9 +684,9 @@ export const artilleryService = {
    * Cancela una prueba en ejecución
    */
   cancelTest: (resultId: string): boolean => {
-    const process = runningTests.get(resultId);
-    if (process) {
-      process.kill();
+    const artilleryProcess = runningTests.get(resultId);
+    if (artilleryProcess) {
+      artilleryProcess.kill();
       runningTests.delete(resultId);
       
       // Actualizar el resultado como cancelado

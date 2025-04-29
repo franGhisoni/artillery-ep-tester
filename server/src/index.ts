@@ -3,9 +3,15 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
 import path from 'path';
+import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+
 import { artilleryService } from './artilleryService';
 import { storage } from './storage';
-import { Endpoint, LoadTest } from './types';
+import { Endpoint, LoadTest, TestResult } from './types';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Configuración básica
 const app = express();
